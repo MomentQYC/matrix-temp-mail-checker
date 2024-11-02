@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-
+    if: ${{ secrets.ENABLE_PP_WORKFLOW == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
