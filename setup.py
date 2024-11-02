@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 with open("README.md") as f:
     long_description = f.read()
@@ -10,7 +10,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     install_requires=["matrix-synapse>=1.37.0"],
-    description="A Synapse spam checker module to block email domains.",
+    description="A Synapse spam checker module to block temp email domains.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="MomentQYC",

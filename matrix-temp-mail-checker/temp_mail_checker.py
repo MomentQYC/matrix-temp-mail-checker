@@ -1,35 +1,36 @@
+from typing import Collection, Optional, Tuple
 from synapse.spam_checker_api import RegistrationBehaviour
 import logging
 
 logger = logging.getLogger(__name__)
 
+
 class TempMailChecker:
-    def __init__(self, config, api):
-        self.api = api
-        self.api.register_spam_checker_callbacks(
-            check_registration_for_spam=self.check_registration_for_spam
-        )
-        self.blocked_domains = self._load_blocked_domains(config.get("blocked_domains_file"))
 
     @staticmethod
-    def parse_config(config):
+    def parse_config(config) -> dict:
         return config
 
-    def _load_blocked_domains(self, file_path):
-        try:
-            with open(file_path, "r") as f:
-                domains = {line.strip().lower() for line in f if line.strip()}
-            logger.info(f"Loaded {len(domains)} blocked domains.")
-            return domains
-        except Exception as e:
-            logger.error(f"Failed to load blocked domains file: {e}")
-            return set()
+    def __init__(self, config: dict, api):
+        self.api = api
+        api.register_spam_checker_callbacks(check_registration_for_spam=self.check_registration_for_spam)
+        with open(config["blocked_domains_file"], "r") as f:
+            self.blocked_domains = {line.strip().lower() for line in f if line.strip()}
+        logger.info(f"Loaded {len(self.blocked_domains)} blocked domains.")
 
     async def check_registration_for_spam(
-        self, email_threepid, username, request_info, auth_provider_id=None
+        self,
+        email_threepid: Optional[dict],
+        username: Optional[str],
+        request_info: Collection[Tuple[str, str]],
+        auth_provider_id: Optional[str] = None,
     ):
         if email_threepid:
-            domain = email_threepid.get("address").split('@')[-1].lower()
+            try:
+                domain: str = email_threepid["address"].split("@")[-1].lower()
+            except Exception:
+                logger.critical(f"Wrong email_threepid: {type(email_threepid)} : {email_threepid}")
+                return RegistrationBehaviour.DENY
             if domain in self.blocked_domains:
                 logger.warning(f"Blocked registration attempt for email domain: {domain}")
                 return RegistrationBehaviour.DENY
