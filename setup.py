@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 with open("README.md") as f:
     long_description = f.read()
@@ -13,8 +13,8 @@ setup(
     description="A Synapse spam checker module to block temp email domains.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="MomentQYC",
-    url="https://github.com/MomentQYC/matrix-temp-mail-checker",
+    author="Whimsies YATeam",
+    url="https://github.com/Whimsies-YAT/matrix-temp-mail-checker",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
